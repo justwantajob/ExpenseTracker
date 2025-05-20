@@ -8,14 +8,25 @@
 import SwiftUI
 
 struct ContentView: View {
+    @State private var expenses = ["Coffee - $5", "Groceries - 25", "Books - $10"]
+    @State private var newExpense = ""
+
     var body: some View {
         VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+            HStack {
+                TextField("Add expense", text: $newExpense)
+                Button(action: {
+                    expenses.append(newExpense)
+                    newExpense = ""
+                }) {
+                    Text("Add")
+                }
+            }
+            .padding()
         }
-        .padding()
+        List(expenses, id: \.self) { item in
+            Text(item)
+        }
     }
 }
 
