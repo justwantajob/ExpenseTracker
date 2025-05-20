@@ -21,8 +21,8 @@ class ExpenseViewModel: ObservableObject {
         loadExpenses()
     }
 
-    func addExpense(name: String, amount: Double) {
-        let new = Expense(name: name, amount: amount)
+    func addExpense(name: String, amount: Double, category: ExpenseCategory) {
+        let new = Expense(name: name, amount: amount, category: category)
         expenses.append(new)
     }
 
