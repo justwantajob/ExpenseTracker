@@ -8,36 +8,24 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State private var expenses: [Expense] = [
-        Expense(name: "Coffee", amount: 5),
-        Expense(name: "Groceries", amount: 25)
-    ]
+    @StateObject private var viewModel = ExpenseViewModel()
 
     @State private var newName = ""
     @State private var newAmount = ""
-    
-    func totalAmount() -> Double {
-        expenses.reduce(0) {$0 + $1.amount}
-    }
-    
-    func deleteItems(at offsets: IndexSet) {
-        expenses.remove(atOffsets: offsets)
-    }
 
     var body: some View {
         VStack {
             HStack {
                 TextField("Expense Name", text: $newName)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
-                
+
                 TextField("Amount", text: $newAmount)
                     .keyboardType(.decimalPad)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
 
                 Button(action: {
                     if let amount = Double(newAmount) {
-                        let expense = Expense(name: newName, amount: amount)
-                        expenses.append(expense)
+                        viewModel.addExpense(name: newName, amount: amount)
                         newName = ""
                         newAmount = ""
                     }
@@ -48,17 +36,17 @@ struct ContentView: View {
             .padding()
 
             List {
-                ForEach(expenses) { expense in
+                ForEach(viewModel.expenses) { expense in
                     HStack {
                         Text(expense.name)
                         Spacer()
-                        Text("$\(expense.amount, specifier: "%.2f")")
+                        Text("₺\(expense.amount, specifier: "%.2f")")
                     }
                 }
-                .onDelete(perform: deleteItems)
+                .onDelete(perform: viewModel.deleteExpense)
             }
             
-            Text("Total: $\(totalAmount(), specifier: "%.2f")")
+            Text("Toplam: ₺\(viewModel.totalAmount(), specifier: "%.2f")")
                 .font(.headline)
                 .padding()
         }
